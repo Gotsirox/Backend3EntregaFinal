@@ -1,0 +1,16 @@
+# Prueba de carga heredada de la clase 3, adaptada a las rutas de la entrega final
+config:
+  target: "http://localhost:8080"
+  phases:
+    - duration: 60
+      arrivalRate: 10
+scenarios:
+  - flow:
+      - get:
+          url: "/api/users"
+  - flow:
+      - post:
+          url: "/api/sessions/login"
+          json:
+            email: "testuser@example.com"
+            password: "123456"

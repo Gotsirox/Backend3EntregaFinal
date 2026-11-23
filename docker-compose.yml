@@ -1,0 +1,26 @@
+services:
+  mongo:
+    image: mongo:6
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: coderhouse
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+
+  api:
+    build: .
+    image: ${DOCKER_IMAGE:-entrega-final:latest}
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    environment:
+      PORT: 8080
+      MONGODB_URI: mongodb://mongo:27017/coderhouse
+      JWT_SECRET: cambia-este-secreto
+    ports:
+      - "8080:8080"
+
+volumes:
+  mongo_data:

@@ -1,0 +1,49 @@
+# Despliegue en Kubernetes heredado de la clase 4 (opcional para la entrega)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: entrega-final
+  labels:
+    app: entrega-final
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: entrega-final
+  template:
+    metadata:
+      labels:
+        app: entrega-final
+    spec:
+      containers:
+        - name: entrega-final
+          image: crdobert/entrega-final:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: PORT
+              value: "8080"
+            - name: MONGODB_URI
+              value: "mongodb://mongo:27017/coderhouse"
+            - name: JWT_SECRET
+              value: "cambia-este-secreto"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: entrega-final
+  labels:
+    app: entrega-final
+spec:
+  type: NodePort
+  selector:
+    app: entrega-final
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: http
+      nodePort: 30080
